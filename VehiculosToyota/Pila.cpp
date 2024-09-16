@@ -31,16 +31,19 @@ void Pila::mostrar() const {
 }
 
 void Pila::quicksort() {
-    quicksortRec(top, nullptr);
+    if(top) //verificar que la pila no esté vacía
+      quicksortRec(top, obtenerUltimoNodo());
 }
 
 Pila::Nodo::Nodo(const Pieza& p, Nodo* s) : pieza(p), siguiente(s) {}
 
 void Pila::quicksortRec(Nodo* inicio, Nodo* fin) {
-    if (inicio != fin && inicio != fin) {
+    if (inicio != fin && inicio != nullptr && inicio != fin->siguiente) {
         Nodo* pivo = particionar(inicio, fin);
-        quicksortRec(inicio, pivo);
-        quicksortRec(pivo->siguiente, fin);
+        quicksortRec(inicio, pivo);           // Ordenar la parte izquierda
+        if (pivo != nullptr && pivo->siguiente != nullptr) {
+            quicksortRec(pivo->siguiente, fin); // Ordenar la parte derecha
+        }
     }
 }
 
@@ -48,14 +51,14 @@ Pila::Nodo* Pila::particionar(Nodo* inicio, Nodo* fin) {
     Pieza pivo = inicio->pieza;
     Nodo* izq = inicio;
     Nodo* der = inicio->siguiente;
-    while (der != fin) {
+    while (der != fin->siguiente) {
         if (der->pieza.getPrioridad() < pivo.getPrioridad()) {
-            intercambiarPiezas(izq->pieza, der->pieza);
             izq = izq->siguiente;
+            intercambiarPiezas(izq->pieza, der->pieza);
         }
         der = der->siguiente;
     }
-    intercambiarPiezas(izq->pieza, inicio->pieza);
+    intercambiarPiezas(inicio->pieza, izq->pieza);
     return izq;
 }
 
@@ -63,6 +66,14 @@ void Pila::intercambiarPiezas(Pieza& a, Pieza& b) {
     Pieza temp = a;
     a = b;
     b = temp;
+}
+
+Pila::Nodo* Pila::obtenerUltimoNodo() const{
+    Nodo* temp = top;
+    while (temp && temp->siguiente) {
+        temp = temp->siguiente;
+    }
+    return temp;
 }
 
 int Pila::size() const {

@@ -12,99 +12,53 @@ ListaDobleCircular::~ListaDobleCircular() {
         delete actual;
         actual = siguiente;
     } while (actual != cabeza);
+    cabeza = nullptr;
 }
 
-Nodo* ListaDobleCircular::dividirLista(Nodo* inicio) {
-    if (!inicio || inicio->siguiente == inicio) {
-        return nullptr;
-    }
+Nodo* ListaDobleCircular::dividirLista(Nodo* cabeza) {
+    Nodo* rapido = cabeza;
+    Nodo* lento = cabeza;
 
-    Nodo* lento = inicio;
-    Nodo* rapido = inicio->siguiente;
-
-    while (rapido != inicio && rapido->siguiente != inicio) {
-        lento = lento->siguiente;
+    while (rapido->siguiente && rapido->siguiente->siguiente) {
         rapido = rapido->siguiente->siguiente;
+        lento = lento->siguiente;
     }
 
     Nodo* mitad = lento->siguiente;
-    lento->siguiente = inicio;
-    inicio->anterior = lento;
-    mitad->anterior = nullptr;
-
-    Nodo* ultimo = mitad;
-    while (ultimo->siguiente != inicio) {
-        ultimo = ultimo->siguiente;
-    }
-    ultimo->siguiente = mitad;
-
-    return mitad;
+    lento->siguiente = nullptr;
+    return mitad; // Retor la cabeza de la segunda mitad
 }
 
-Nodo* ListaDobleCircular::fusionarListas(Nodo* lista1, Nodo* lista2) {
-    if (!lista1) return lista2;
-    if (!lista2) return lista1;
+Nodo* ListaDobleCircular::fusionarListas(Nodo* izquierda, Nodo* derecha) {
+    if (!izquierda) 
+        return derecha;
+    if (!derecha) 
+        return izquierda;
 
-    Nodo* cabezaNueva = nullptr;
-    Nodo* colaNueva = nullptr;
-
-    while (lista1 && lista2) {
-        if (lista1->pieza.getPrioridad() <= lista2->pieza.getPrioridad()) {
-            if (!cabezaNueva) {
-                cabezaNueva = lista1;
-            }
-            else {
-                colaNueva->siguiente = lista1;
-                lista1->anterior = colaNueva;
-            }
-            colaNueva = lista1;
-            lista1 = lista1->siguiente;
-        }
-        else {
-            if (!cabezaNueva) {
-                cabezaNueva = lista2;
-            }
-            else {
-                colaNueva->siguiente = lista2;
-                lista2->anterior = colaNueva;
-            }
-            colaNueva = lista2;
-            lista2 = lista2->siguiente;
-        }
-    }
-
-    if (lista1) {
-        colaNueva->siguiente = lista1;
-        lista1->anterior = colaNueva;
+    if (izquierda->pieza.getPrioridad() <= derecha->pieza.getPrioridad()) {
+        izquierda->siguiente = fusionarListas(izquierda->siguiente, derecha);
+        izquierda->siguiente->anterior = izquierda;
+        izquierda->anterior = nullptr;
+        return izquierda;
     }
     else {
-        colaNueva->siguiente = lista2;
-        lista2->anterior = colaNueva;
+        derecha->siguiente = fusionarListas(izquierda, derecha->siguiente);
+        derecha->siguiente->anterior = derecha;
+        derecha->anterior = nullptr;
+        return derecha;
     }
-
-    return cabezaNueva;
 }
 
-Nodo* ListaDobleCircular::mergeSort(Nodo* inicio) {
-    if (!inicio || inicio->siguiente == inicio) {
-        return inicio;
-    }
+Nodo* ListaDobleCircular::mergeSort(Nodo* cabeza) {
+    if (!cabeza || !cabeza->siguiente) 
+        return cabeza;
 
-    Nodo* mitad = dividirLista(inicio);
-    Nodo* lista1 = mergeSort(inicio);
-    Nodo* lista2 = mergeSort(mitad);
+    Nodo* mitad = dividirLista(cabeza);
 
-    Nodo* cabezaOrdenada = fusionarListas(lista1, lista2);
-    Nodo* ultimo = cabezaOrdenada;
-    while (ultimo && ultimo->siguiente != cabezaOrdenada) {
-        ultimo = ultimo->siguiente;
-    }
-    if (ultimo) {
-        cabezaOrdenada->anterior = ultimo;
-        ultimo->siguiente = cabezaOrdenada;
-    }
+    Nodo* izquierda = mergeSort(cabeza);
+    Nodo* derecha = mergeSort(mitad);
 
-    return cabezaOrdenada;
+    return fusionarListas(izquierda, derecha);
 }
 
 void ListaDobleCircular::insertar(const Pieza& pieza) {
@@ -135,7 +89,11 @@ void ListaDobleCircular::eliminarDefectuosos() {
     do {
         Nodo* siguiente = actual->siguiente;
         if (actual->pieza.getEstado() == Pieza::CRITICA) {
-            if (actual == cabeza) cabeza = siguiente;
+            if (actual == cabeza){ 
+                cabeza = siguiente;
+                if (cabeza == actual) //si solo hay un nodo en la lista
+                    cabeza = nullptr;
+            }
             actual->anterior->siguiente = siguiente;
             siguiente->anterior = actual->anterior;
             delete actual;
@@ -154,11 +112,23 @@ void ListaDobleCircular::mostrar() const {
 }
 
 void ListaDobleCircular::ordenar() {
-    if (!cabeza) return;
-    cabeza = mergeSort(cabeza);
+    if (!cabeza || !cabeza->siguiente) return;
+
+    // Desconectar la lista circular
     Nodo* ultimo = cabeza->anterior;
-    cabeza->anterior = ultimo;
-    ultimo->siguiente = cabeza;
+    ultimo->siguiente = nullptr;
+    cabeza->anterior = nullptr;
+
+    // Ordenar la lista
+    cabeza = mergeSort(cabeza);
+
+    // Reconectar la lista circular
+    Nodo* actual = cabeza;
+    while (actual->siguiente) {
+        actual = actual->siguiente;
+    }
+    actual->siguiente = cabeza;
+    cabeza->anterior = actual;
 }
 
 int ListaDobleCircular::size() const {

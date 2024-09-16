@@ -27,6 +27,7 @@ private:
     void quicksortRec(Nodo* inicio, Nodo* fin);
     Nodo* particionar(Nodo* inicio, Nodo* fin);
     void intercambiarPiezas(Pieza& a, Pieza& b);
+    Nodo* obtenerUltimoNodo() const;
 
 };
 
