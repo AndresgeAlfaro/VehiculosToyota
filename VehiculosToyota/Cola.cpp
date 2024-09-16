@@ -3,7 +3,7 @@
 Cola::Cola() : frente(nullptr), fin(nullptr) {}
 
 void Cola::enqueue(const Pieza& pieza) {
-    if (pieza.getEstado() == Pieza::REGULAR) { // Solo permitir piezas regulares
+    if (pieza.getEstado() == Pieza::REGULAR) {
         Nodo* nuevo = new Nodo(pieza);
         if (fin) {
             fin->siguiente = nuevo;
@@ -102,7 +102,6 @@ void Cola::heapSort(Pieza* arr, int n) {
     }
 }
 
-// Método para obtener el tamaño de la cola
 int Cola::size() const {
     return getSize();
 }

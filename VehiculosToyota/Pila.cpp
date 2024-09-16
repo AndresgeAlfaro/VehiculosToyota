@@ -59,14 +59,12 @@ Pila::Nodo* Pila::particionar(Nodo* inicio, Nodo* fin) {
     return izq;
 }
 
-// Función para intercambiar dos piezas
 void Pila::intercambiarPiezas(Pieza& a, Pieza& b) {
     Pieza temp = a;
     a = b;
     b = temp;
 }
 
-// Método para obtener el tamaño de la pila
 int Pila::size() const {
     return contador;
 }
