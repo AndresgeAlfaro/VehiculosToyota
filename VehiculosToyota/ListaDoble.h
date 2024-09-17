@@ -3,28 +3,28 @@
 
 #include "Cola.h"
 
-class Nodo {
-public:
-    Pieza pieza;
-    Nodo* siguiente;
-    Nodo* anterior;
+struct NodoLista {
 
-    Nodo(const Pieza& p);
+    Pieza pieza;
+    NodoLista* siguiente;
+    NodoLista* anterior;
+
+    NodoLista(const Pieza& p);
 };
 
 class ListaDobleCircular {
 private:
-    Nodo* cabeza;
+    NodoLista* cabeza;
 
-    Nodo* dividirLista(Nodo* inicio);
-    Nodo* fusionarListas(Nodo* lista1, Nodo* lista2);
-    Nodo* mergeSort(Nodo* inicio);
+    NodoLista* dividirLista(NodoLista* );
+    NodoLista* fusionarListas(NodoLista* , NodoLista* );
+    NodoLista* mergeSort(NodoLista* );
 
 public:
     ListaDobleCircular();
     ~ListaDobleCircular();
 
-    void insertar(const Pieza& pieza);
+    void insertar(const Pieza& );
     void eliminarDefectuosos();
     void mostrar() const;
     void ordenar();

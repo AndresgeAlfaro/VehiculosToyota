@@ -4,7 +4,7 @@ Cola::Cola() : frente(nullptr), fin(nullptr) {}
 
 void Cola::enqueue(const Pieza& pieza) {
     if (pieza.getEstado() == Pieza::REGULAR) {
-        Nodo* nuevo = new Nodo(pieza);
+        NodoCola* nuevo = new NodoCola(pieza);
         if (fin) {
             fin->siguiente = nuevo;
         }
@@ -20,7 +20,7 @@ void Cola::enqueue(const Pieza& pieza) {
 
 void Cola::dequeue() {
     if (frente) {
-        Nodo* temp = frente;
+        NodoCola* temp = frente;
         frente = frente->siguiente;
         if (!frente) {
             fin = nullptr;
@@ -30,7 +30,7 @@ void Cola::dequeue() {
 }
 
 void Cola::mostrar() const {
-    Nodo* actual = frente;
+    NodoCola* actual = frente;
     while (actual) {
         actual->pieza.imprimir();
         actual = actual->siguiente;
@@ -40,7 +40,7 @@ void Cola::mostrar() const {
 void Cola::heapsort() {
     int size = getSize();
     Pieza* piezas = new Pieza[size];
-    Nodo* actual = frente;
+    NodoCola* actual = frente;
     int i = 0;
     while (actual) {
         piezas[i++] = actual->pieza;
@@ -60,11 +60,11 @@ void Cola::heapsort() {
     delete[] piezas;
 }
 
-Cola::Nodo::Nodo(const Pieza& p) : pieza(p), siguiente(nullptr) {}
+Cola::NodoCola::NodoCola(const Pieza& p) : pieza(p), siguiente(nullptr) {}
 
 int Cola::getSize() const {
     int size = 0;
-    Nodo* actual = frente;
+    NodoCola* actual = frente;
     while (actual) {
         ++size;
         actual = actual->siguiente;
@@ -73,21 +73,21 @@ int Cola::getSize() const {
 }
 
 void Cola::heapify(Pieza* arr, int n, int i) {
-    int largest = i;
+    int smallest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    if (left < n && arr[left].getPrioridad() > arr[largest].getPrioridad()) {
-        largest = left;
+    if (left < n && arr[left].getId() < arr[smallest].getId()) {
+        smallest = left;
     }
 
-    if (right < n && arr[right].getPrioridad() > arr[largest].getPrioridad()) {
-        largest = right;
+    if (right < n && arr[right].getId() < arr[smallest].getId()) {
+        smallest = right;
     }
 
-    if (largest != i) {
-        std::swap(arr[i], arr[largest]);
-        heapify(arr, n, largest);
+    if (smallest != i) {
+        std::swap(arr[i], arr[smallest]);
+        heapify(arr, n, smallest);
     }
 }
 
@@ -105,4 +105,5 @@ void Cola::heapSort(Pieza* arr, int n) {
 int Cola::size() const {
     return getSize();
 }
+
 

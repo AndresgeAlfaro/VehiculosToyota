@@ -3,27 +3,27 @@
 Pila::Pila() : top(nullptr), contador(0) {}
 
 void Pila::push(const Pieza& pieza) {
-    if (pieza.getEstado() == Pieza::CRITICA) { // Solo permitir piezas críticas
-        Nodo* nuevo = new Nodo(pieza, top);
+    if (pieza.getEstado() == Pieza::CRITICA) {
+        NodoPila* nuevo = new NodoPila(pieza, top);
         top = nuevo;
-        contador++; // Incrementar el contador al agregar un nuevo elemento
+        contador++;
     }
     else {
-        std::cerr << "Error: Solo se permiten piezas críticas en la pila." << std::endl;
+        std::cerr << "Error: Solo se permiten piezas criticas en la pila." << std::endl;
     }
 }
 
 void Pila::pop() {
     if (top) {
-        Nodo* temp = top;
+        NodoPila* temp = top;
         top = top->siguiente;
         delete temp;
-        contador--; // Decrementar el contador al eliminar un elemento
+        contador--;
     }
 }
 
 void Pila::mostrar() const {
-    Nodo* actual = top;
+    NodoPila* actual = top;
     while (actual) {
         actual->pieza.imprimir();
         actual = actual->siguiente;
@@ -31,28 +31,28 @@ void Pila::mostrar() const {
 }
 
 void Pila::quicksort() {
-    if(top) //verificar que la pila no esté vacía
-      quicksortRec(top, obtenerUltimoNodo());
+    if (top)
+        quicksortRec(top, obtenerUltimoNodo());
 }
 
-Pila::Nodo::Nodo(const Pieza& p, Nodo* s) : pieza(p), siguiente(s) {}
+Pila::NodoPila::NodoPila(const Pieza& p, NodoPila* s) : pieza(p), siguiente(s) {}
 
-void Pila::quicksortRec(Nodo* inicio, Nodo* fin) {
+void Pila::quicksortRec(NodoPila* inicio, NodoPila* fin) {
     if (inicio != fin && inicio != nullptr && inicio != fin->siguiente) {
-        Nodo* pivo = particionar(inicio, fin);
-        quicksortRec(inicio, pivo);           // Ordenar la parte izquierda
+        NodoPila* pivo = particionar(inicio, fin);
+        quicksortRec(inicio, pivo);
         if (pivo != nullptr && pivo->siguiente != nullptr) {
-            quicksortRec(pivo->siguiente, fin); // Ordenar la parte derecha
+            quicksortRec(pivo->siguiente, fin);
         }
     }
 }
 
-Pila::Nodo* Pila::particionar(Nodo* inicio, Nodo* fin) {
+Pila::NodoPila* Pila::particionar(NodoPila* inicio, NodoPila* fin) {
     Pieza pivo = inicio->pieza;
-    Nodo* izq = inicio;
-    Nodo* der = inicio->siguiente;
+    NodoPila* izq = inicio;
+    NodoPila* der = inicio->siguiente;
     while (der != fin->siguiente) {
-        if (der->pieza.getPrioridad() < pivo.getPrioridad()) {
+        if (der->pieza.getId() > pivo.getId()) {
             izq = izq->siguiente;
             intercambiarPiezas(izq->pieza, der->pieza);
         }
@@ -68,8 +68,8 @@ void Pila::intercambiarPiezas(Pieza& a, Pieza& b) {
     b = temp;
 }
 
-Pila::Nodo* Pila::obtenerUltimoNodo() const{
-    Nodo* temp = top;
+Pila::NodoPila* Pila::obtenerUltimoNodo() const {
+    NodoPila* temp = top;
     while (temp && temp->siguiente) {
         temp = temp->siguiente;
     }
@@ -79,3 +79,4 @@ Pila::Nodo* Pila::obtenerUltimoNodo() const{
 int Pila::size() const {
     return contador;
 }
+

@@ -8,26 +8,26 @@ class Pila {
 public:
     Pila();
 
-    void push(const Pieza& pieza);
+    void push(const Pieza& );
     void pop();
     void mostrar() const;
     void quicksort();
     int size() const;
 
 private:
-    struct Nodo {
+    struct NodoPila {
         Pieza pieza;
-        Nodo* siguiente;
-        Nodo(const Pieza& p, Nodo* s);
+        NodoPila* siguiente;
+        NodoPila(const Pieza& , NodoPila* );
     };
 
-    Nodo* top;
+    NodoPila* top;
     int contador;
 
-    void quicksortRec(Nodo* inicio, Nodo* fin);
-    Nodo* particionar(Nodo* inicio, Nodo* fin);
-    void intercambiarPiezas(Pieza& a, Pieza& b);
-    Nodo* obtenerUltimoNodo() const;
+    void quicksortRec(NodoPila* , NodoPila* );
+    NodoPila* particionar(NodoPila* , NodoPila* );
+    void intercambiarPiezas(Pieza& , Pieza& );
+    NodoPila* obtenerUltimoNodo() const;
 
 };
 

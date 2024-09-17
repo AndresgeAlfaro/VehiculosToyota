@@ -5,5 +5,6 @@
 #include <ctime>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 #endif // !INCUDES_H

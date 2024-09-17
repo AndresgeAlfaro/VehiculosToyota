@@ -1,35 +1,35 @@
 #include "ListaDoble.h"
 
-Nodo::Nodo(const Pieza& p) : pieza(p), siguiente(nullptr), anterior(nullptr) {}
+NodoLista::NodoLista(const Pieza& p) : pieza(p), siguiente(nullptr), anterior(nullptr) {}
 
 ListaDobleCircular::ListaDobleCircular() : cabeza(nullptr) {}
 
 ListaDobleCircular::~ListaDobleCircular() {
     if (!cabeza) return;
-    Nodo* actual = cabeza;
+    NodoLista* actual = cabeza;
     do {
-        Nodo* siguiente = actual->siguiente;
+        NodoLista* siguiente = actual->siguiente;
         delete actual;
         actual = siguiente;
     } while (actual != cabeza);
     cabeza = nullptr;
 }
 
-Nodo* ListaDobleCircular::dividirLista(Nodo* cabeza) {
-    Nodo* rapido = cabeza;
-    Nodo* lento = cabeza;
+NodoLista* ListaDobleCircular::dividirLista(NodoLista* cabeza) {
+    NodoLista* rapido = cabeza;
+    NodoLista* lento = cabeza;
 
     while (rapido->siguiente && rapido->siguiente->siguiente) {
         rapido = rapido->siguiente->siguiente;
         lento = lento->siguiente;
     }
 
-    Nodo* mitad = lento->siguiente;
+    NodoLista* mitad = lento->siguiente;
     lento->siguiente = nullptr;
-    return mitad; // Retor la cabeza de la segunda mitad
+    return mitad;
 }
 
-Nodo* ListaDobleCircular::fusionarListas(Nodo* izquierda, Nodo* derecha) {
+NodoLista* ListaDobleCircular::fusionarListas(NodoLista* izquierda, NodoLista* derecha) {
     if (!izquierda) 
         return derecha;
     if (!derecha) 
@@ -49,14 +49,14 @@ Nodo* ListaDobleCircular::fusionarListas(Nodo* izquierda, Nodo* derecha) {
     }
 }
 
-Nodo* ListaDobleCircular::mergeSort(Nodo* cabeza) {
+NodoLista* ListaDobleCircular::mergeSort(NodoLista* cabeza) {
     if (!cabeza || !cabeza->siguiente) 
         return cabeza;
 
-    Nodo* mitad = dividirLista(cabeza);
+    NodoLista* mitad = dividirLista(cabeza);
 
-    Nodo* izquierda = mergeSort(cabeza);
-    Nodo* derecha = mergeSort(mitad);
+    NodoLista* izquierda = mergeSort(cabeza);
+    NodoLista* derecha = mergeSort(mitad);
 
     return fusionarListas(izquierda, derecha);
 }
@@ -67,7 +67,7 @@ void ListaDobleCircular::insertar(const Pieza& pieza) {
         return;
     }
 
-    Nodo* nuevo = new Nodo(pieza);
+    NodoLista* nuevo = new NodoLista(pieza);
 
     if (!cabeza) {
         cabeza = nuevo;
@@ -75,7 +75,7 @@ void ListaDobleCircular::insertar(const Pieza& pieza) {
         cabeza->anterior = cabeza;
     }
     else {
-        Nodo* ultimo = cabeza->anterior;
+        NodoLista* ultimo = cabeza->anterior;
         ultimo->siguiente = nuevo;
         nuevo->anterior = ultimo;
         nuevo->siguiente = cabeza;
@@ -85,13 +85,13 @@ void ListaDobleCircular::insertar(const Pieza& pieza) {
 
 void ListaDobleCircular::eliminarDefectuosos() {
     if (!cabeza) return;
-    Nodo* actual = cabeza;
+    NodoLista* actual = cabeza;
     do {
-        Nodo* siguiente = actual->siguiente;
+        NodoLista* siguiente = actual->siguiente;
         if (actual->pieza.getEstado() == Pieza::CRITICA) {
             if (actual == cabeza){ 
                 cabeza = siguiente;
-                if (cabeza == actual) //si solo hay un nodo en la lista
+                if (cabeza == actual)
                     cabeza = nullptr;
             }
             actual->anterior->siguiente = siguiente;
@@ -104,7 +104,7 @@ void ListaDobleCircular::eliminarDefectuosos() {
 
 void ListaDobleCircular::mostrar() const {
     if (!cabeza) return;
-    Nodo* actual = cabeza;
+    NodoLista* actual = cabeza;
     do {
         actual->pieza.imprimir();
         actual = actual->siguiente;
@@ -114,16 +114,13 @@ void ListaDobleCircular::mostrar() const {
 void ListaDobleCircular::ordenar() {
     if (!cabeza || !cabeza->siguiente) return;
 
-    // Desconectar la lista circular
-    Nodo* ultimo = cabeza->anterior;
+    NodoLista* ultimo = cabeza->anterior;
     ultimo->siguiente = nullptr;
     cabeza->anterior = nullptr;
 
-    // Ordenar la lista
     cabeza = mergeSort(cabeza);
 
-    // Reconectar la lista circular
-    Nodo* actual = cabeza;
+    NodoLista* actual = cabeza;
     while (actual->siguiente) {
         actual = actual->siguiente;
     }
@@ -134,7 +131,7 @@ void ListaDobleCircular::ordenar() {
 int ListaDobleCircular::size() const {
     if (!cabeza) return 0;
     int count = 0;
-    Nodo* actual = cabeza;
+    NodoLista* actual = cabeza;
     do {
         ++count;
         actual = actual->siguiente;

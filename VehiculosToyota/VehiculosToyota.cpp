@@ -5,8 +5,8 @@ PRIMER EXAMEN PARCIAL
 PROFESOR: MS.C. DEIVERT GUILTRICHS CORDERO
 
 Estudiantes:
-    Andrés Alfaro
-    Nayelly Núñez Morales - 118830724
+    Andrés Alfaro Ramirez -- 1-1919-0404
+    Nayelly Núñez Morales -- 1-1883-0724
 
 */
 

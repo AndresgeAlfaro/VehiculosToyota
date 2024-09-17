@@ -10,16 +10,16 @@ private:
     Cola cola;
     ListaDobleCircular lista;
 
-    void insertarPiezasEnPila(int totalPiezas);
+public:
+    void insertarPiezas(int , Pieza []);
+    void insertarPiezasEnPila(int , Pieza []);
+    void insertarPiezasEnCola(int , Pieza []);
+    void insertarPiezasEnListaDoble(int , Pieza []);
+
     void ordenarYMostrarPila();
-
-    void insertarPiezasEnCola(int totalPiezas);
     void ordenarYMostrarCola();
-
-    void insertarPiezasEnListaDoble(int totalPiezas);
     void ordenarYMostrarListaDoble();
 
-public:
     void ejecutar();
 };
 

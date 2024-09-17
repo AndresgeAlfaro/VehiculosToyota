@@ -7,25 +7,25 @@ class Cola {
 public:
     Cola();
 
-    void enqueue(const Pieza& pieza);
+    void enqueue(const Pieza& );
     void dequeue();
     void mostrar() const;
     void heapsort();
     int size() const;
 
 private:
-    struct Nodo {
+    struct NodoCola {
         Pieza pieza;
-        Nodo* siguiente;
-        Nodo(const Pieza& p);
+        NodoCola* siguiente;
+        NodoCola(const Pieza& );
     };
 
-    Nodo* frente;
-    Nodo* fin;
+    NodoCola* frente;
+    NodoCola* fin;
 
     int getSize() const;
-    void heapify(Pieza* arr, int n, int i);
-    void heapSort(Pieza* arr, int n);
+    void heapify(Pieza* , int , int );
+    void heapSort(Pieza* , int );
     
 
 };
